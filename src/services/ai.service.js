@@ -5,10 +5,20 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
  * Provides intelligent data analysis and insights using Google Gemini API
  */
 
+// Status constants for AI service responses
+const AI_STATUS = {
+  UNAVAILABLE: 'unavailable',
+  ERROR: 'error',
+  DEFAULT: 'complex'
+};
+
 // Initialize Gemini AI with API key from environment
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 const aiService = {
+  // Export status constants
+  STATUS: AI_STATUS,
+  
   /**
    * Get single-word analysis using Google Gemini API
    */
@@ -16,7 +26,7 @@ const aiService = {
     try {
       if (!process.env.GEMINI_API_KEY) {
         console.warn('GEMINI_API_KEY not found in environment variables');
-        return 'unavailable';
+        return AI_STATUS.UNAVAILABLE;
       }
 
       const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
@@ -36,11 +46,11 @@ const aiService = {
       // Ensure single word response
       const singleWord = text.split(/\s+/)[0].replace(/[^a-z]/g, '');
       
-      return singleWord || 'complex';
+      return singleWord || AI_STATUS.DEFAULT;
       
     } catch (error) {
       console.error('Gemini API error:', error.message);
-      return 'error';
+      return AI_STATUS.ERROR;
     }
   },
 

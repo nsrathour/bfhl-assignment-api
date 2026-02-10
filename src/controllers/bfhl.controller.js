@@ -160,6 +160,85 @@ const bfhlController = {
         error: 'Failed to retrieve operation code'
       });
     }
+  },
+
+  /**
+   * GET /bfhl/gemini-status - Check Gemini API key status
+   */
+  checkGeminiStatus: async (req, res) => {
+    try {
+      const apiKey = process.env.GEMINI_API_KEY;
+      
+      // Check if API key is configured
+      if (!apiKey) {
+        return res.status(200).json({
+          is_success: true,
+          gemini_configured: false,
+          gemini_enabled: false,
+          message: 'GEMINI_API_KEY is not configured in environment variables',
+          instructions: 'Add GEMINI_API_KEY to your .env file to enable AI features',
+          api_key_url: 'https://aistudio.google.com/app/apikey'
+        });
+      }
+
+      // Validate API key format
+      const formatValid = apiKey.startsWith('AIza') && apiKey.length > 20;
+      
+      if (!formatValid) {
+        return res.status(200).json({
+          is_success: true,
+          gemini_configured: true,
+          gemini_enabled: false,
+          format_valid: false,
+          message: 'GEMINI_API_KEY format appears invalid',
+          key_length: apiKey.length,
+          key_prefix: apiKey.substring(0, 6)
+        });
+      }
+
+      // Test API connection
+      try {
+        const testResult = await aiService.getSingleWordAnalysis({ 
+          numbers: [1, 2, 3], 
+          alphabets: ['a', 'b', 'c'] 
+        });
+        
+        const isWorking = testResult !== aiService.STATUS.UNAVAILABLE && testResult !== aiService.STATUS.ERROR;
+        
+        return res.status(200).json({
+          is_success: true,
+          gemini_configured: true,
+          gemini_enabled: isWorking,
+          format_valid: true,
+          connection_test: isWorking ? 'success' : 'failed',
+          test_response: testResult,
+          message: isWorking 
+            ? 'Gemini API key is working correctly' 
+            : 'Gemini API key test failed - check key validity',
+          key_length: apiKey.length,
+          key_prefix: apiKey.substring(0, 6)
+        });
+      } catch (apiError) {
+        return res.status(200).json({
+          is_success: true,
+          gemini_configured: true,
+          gemini_enabled: false,
+          format_valid: true,
+          connection_test: 'error',
+          error_message: apiError.message,
+          message: 'Failed to connect to Gemini API - check key validity and network connection'
+        });
+      }
+      
+    } catch (error) {
+      console.error('Gemini status check error:', error);
+      
+      return res.status(500).json({
+        is_success: false,
+        error: 'Failed to check Gemini status',
+        message: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
+      });
+    }
   }
 };
 

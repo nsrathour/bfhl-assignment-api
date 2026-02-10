@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
+    "test:gemini": "node src/utils/testGeminiKey.js",
     "vercel-build": "echo 'No build required'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

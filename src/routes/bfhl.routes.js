@@ -149,6 +149,9 @@ router.post('/',
   bfhlController.processBfhl
 );
 
+// GET /bfhl/gemini-status - Check Gemini API status
+router.get('/gemini-status', bfhlController.checkGeminiStatus);
+
 // GET /bfhl - Operation code endpoint
 router.get('/', bfhlController.getOperationCode);
 
