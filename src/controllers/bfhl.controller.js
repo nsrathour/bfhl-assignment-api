@@ -145,63 +145,9 @@ const bfhlController = {
    */
   getOperationCode: async (req, res) => {
     try {
-      // Test Gemini API configuration
-      const geminiConfig = aiService.validateAPIConfig();
-      const geminiStatus = process.env.GEMINI_API_KEY ? 
-        await aiService.testGeminiConnection() : 
-        { connected: false, error: 'API key not configured' };
-      
       const response = {
-        operation_code: 1,
-        message: "GET method successful",
-        timestamp: new Date().toISOString(),
-        version: "2.0.0",
-        gemini_ai_status: {
-          enabled: !!process.env.GEMINI_API_KEY,
-          connected: geminiStatus.connected,
-          configuration: geminiConfig,
-          features: {
-            single_word_analysis: geminiStatus.connected,
-            data_sentiment: geminiStatus.connected,
-            ai_recommendations: geminiStatus.connected
-          }
-        },
-        supported_operations: {
-          POST: {
-            description: "Process data array with mathematical and AI operations using Google Gemini",
-            input: {
-              data: "Array of strings and numbers",
-              file_b64: "Optional base64 encoded file"
-            },
-            features: [
-              "Number and alphabet separation",
-              "Fibonacci sequence generation",
-              "Prime number identification", 
-              "LCM and HCF calculation",
-              "Google Gemini AI-powered single-word analysis",
-              "AI data sentiment analysis",
-              "Intelligent recommendations",
-              "File processing and validation"
-            ],
-            ai_features: geminiStatus.connected ? [
-              "Pattern recognition with single-word descriptions",
-              "Data sentiment analysis",
-              "AI-powered recommendations",
-              "Confidence scoring"
-            ] : [
-              "Set GEMINI_API_KEY environment variable to enable AI features"
-            ]
-          },
-          GET: {
-            description: "Get operation code and API status",
-            response: "Operation code with Gemini AI status"
-          }
-        },
-        configuration_help: {
-          gemini_setup: "Set GEMINI_API_KEY environment variable with your Google AI Studio API key",
-          api_key_format: "Key should start with 'AIza' and be longer than 20 characters",
-          get_api_key: "Visit https://makersuite.google.com/app/apikey to get your API key"
-        }
+        is_success: true,
+        official_email: process.env.USER_EMAIL || "john_doe_17091999@gmail.com"
       };
       
       res.status(200).json(response);
@@ -210,13 +156,8 @@ const bfhlController = {
       console.error('Operation code error:', error);
       
       res.status(500).json({
-        operation_code: 0,
-        error: 'Failed to retrieve operation code',
-        timestamp: new Date().toISOString(),
-        gemini_ai_status: {
-          enabled: false,
-          error: 'Service unavailable'
-        }
+        is_success: false,
+        error: 'Failed to retrieve operation code'
       });
     }
   }

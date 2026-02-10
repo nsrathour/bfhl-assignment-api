@@ -8,96 +8,23 @@ const process = require('process');
 const healthController = {
   /**
    * GET /health - Health check endpoint
-   * Returns application status and system information
+   * Returns simple success status with official email
    */
   getHealth: async (req, res) => {
     try {
-      const startTime = process.hrtime();
-      
-      // Get current timestamp
-      const timestamp = new Date().toISOString();
-      
-      // Calculate uptime
-      const uptimeSeconds = process.uptime();
-      const uptimeFormatted = formatUptime(uptimeSeconds);
-      
-      // Get memory usage
-      const memoryUsage = process.memoryUsage();
-      const memoryInfo = {
-        used: `${Math.round(memoryUsage.heapUsed / 1024 / 1024 * 100) / 100} MB`,
-        total: `${Math.round(memoryUsage.heapTotal / 1024 / 1024 * 100) / 100} MB`,
-        external: `${Math.round(memoryUsage.external / 1024 / 1024 * 100) / 100} MB`,
-        rss: `${Math.round(memoryUsage.rss / 1024 / 1024 * 100) / 100} MB`
+      const response = {
+        is_success: true,
+        official_email: process.env.USER_EMAIL || "navditya1341.be23@chitkarauniversity.edu.in"
       };
       
-      // Get system information
-      const systemInfo = {
-        platform: os.platform(),
-        arch: os.arch(),
-        nodeVersion: process.version,
-        totalMemory: `${Math.round(os.totalmem() / 1024 / 1024 / 1024 * 100) / 100} GB`,
-        freeMemory: `${Math.round(os.freemem() / 1024 / 1024 / 1024 * 100) / 100} GB`,
-        cpuCount: os.cpus().length,
-        loadAverage: os.loadavg()
-      };
-      
-      // Check database connectivity (placeholder - implement if using database)
-      const dbStatus = await checkDatabaseHealth();
-      
-      // Check external services (placeholder - implement if using external APIs)
-      const externalServices = await checkExternalServices();
-      
-      // Calculate response time
-      const endTime = process.hrtime(startTime);
-      const responseTimeMs = Math.round((endTime[0] * 1000 + endTime[1] * 1e-6) * 100) / 100;
-      
-      // Determine overall health status
-      const isHealthy = dbStatus.healthy && externalServices.healthy;
-      const status = isHealthy ? 'healthy' : 'degraded';
-      const statusCode = isHealthy ? 200 : 503;
-      
-      // Build response
-      const healthResponse = {
-        status: status,
-        timestamp: timestamp,
-        uptime: uptimeFormatted,
-        responseTime: `${responseTimeMs}ms`,
-        version: process.env.npm_package_version || '1.0.0',
-        environment: process.env.NODE_ENV || 'development',
-        server: {
-          name: 'BAJAJ API Server',
-          pid: process.pid,
-          memory: memoryInfo,
-          system: systemInfo
-        },
-        dependencies: {
-          database: dbStatus,
-          externalServices: externalServices
-        },
-        metrics: {
-          requestCount: getRequestCount(),
-          errorRate: getErrorRate(),
-          averageResponseTime: getAverageResponseTime()
-        }
-      };
-      
-      // Set cache headers to prevent caching of health status
-      res.set({
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0'
-      });
-      
-      res.status(statusCode).json(healthResponse);
+      res.status(200).json(response);
       
     } catch (error) {
       console.error('Health check error:', error);
       
-      res.status(503).json({
-        status: 'unhealthy',
-        timestamp: new Date().toISOString(),
-        error: 'Health check failed',
-        message: process.env.NODE_ENV === 'development' ? error.message : 'Service temporarily unavailable'
+      res.status(500).json({
+        is_success: false,
+        error: 'Health check failed'
       });
     }
   }
