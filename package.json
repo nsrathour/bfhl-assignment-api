@@ -1,10 +1,11 @@
 {
   "name": "bajaj",
   "version": "1.0.0",
-  "main": "src/server.js",
+  "main": "api/index.js",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
+    "vercel-build": "echo 'No build required'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

@@ -21,12 +21,18 @@ app.use(cors({
   credentials: true
 }));
 
-// Rate limiting
+// Rate limiting (adjusted for serverless)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: process.env.RATE_LIMIT || 100, // Limit each IP to 100 requests per windowMs
+  max: parseInt(process.env.RATE_LIMIT) || 100, // Limit each IP to 100 requests per windowMs
   message: {
     error: 'Too many requests from this IP, please try again later.'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip: (req) => {
+    // Skip rate limiting for health checks in production
+    return process.env.NODE_ENV === 'production' && req.path === '/api/health';
   }
 });
 app.use(limiter);
