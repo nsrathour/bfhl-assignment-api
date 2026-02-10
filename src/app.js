@@ -46,7 +46,7 @@ app.use(express.urlencoded({
 
 // Request timeout middleware
 app.use((req, res, next) => {
-  res.setTimeout(process.env.REQUEST_TIMEOUT || 30000, () => {
+  res.setTimeout(parseInt(process.env.REQUEST_TIMEOUT) || 30000, () => {
     res.status(408).json({
       error: 'Request timeout',
       message: 'The request took too long to process'
