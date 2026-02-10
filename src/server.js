@@ -15,7 +15,7 @@ const startServer = () => {
       console.log(`Started at: ${new Date().toISOString()}`);
       console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(`API URL: http://${HOST}:${PORT}`);
-      console.log(`Health Check: http://${HOST}:${PORT}/api/health`);
+      console.log(`Health Check: http://${HOST}:${PORT}/health`);
     });
 
     // Handle server errors

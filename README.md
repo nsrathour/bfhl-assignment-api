@@ -43,7 +43,7 @@ vercel --prod
 
 ## API Endpoints (Production)
 - Main API: `https://your-vercel-app.vercel.app/`
-- Health Check: `https://your-vercel-app.vercel.app/api/health`
+- Health Check: `https://your-vercel-app.vercel.app/health`
 - BFHL Endpoint: `https://your-vercel-app.vercel.app/bfhl`
 
 ## Local Development

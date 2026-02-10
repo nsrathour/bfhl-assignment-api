@@ -32,7 +32,7 @@ const limiter = rateLimit({
   legacyHeaders: false,
   skip: (req) => {
     // Skip rate limiting for health checks in production
-    return process.env.NODE_ENV === 'production' && req.path === '/api/health';
+    return process.env.NODE_ENV === 'production' && req.path === '/health';
   }
 });
 app.use(limiter);
@@ -62,7 +62,7 @@ app.use((req, res, next) => {
 });
 
 // Register routes
-app.use('/api/health', healthRoutes);
+app.use('/health', healthRoutes);
 app.use('/bfhl', bfhlRoutes);
 
 // Root endpoint
