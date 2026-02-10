@@ -203,7 +203,7 @@ const bfhlController = {
           alphabets: ['a', 'b', 'c'] 
         });
         
-        const isWorking = testResult !== 'unavailable' && testResult !== 'error';
+        const isWorking = testResult !== aiService.STATUS.UNAVAILABLE && testResult !== aiService.STATUS.ERROR;
         
         return res.status(200).json({
           is_success: true,

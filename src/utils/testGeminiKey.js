@@ -95,9 +95,17 @@ async function testGeminiKey() {
     
     const singleWord = analysisText.split(/\s+/)[0].replace(/[^a-z]/g, '');
     
-    console.log('✓ Successfully received analysis from Gemini API');
-    console.log(`  Analysis result: "${singleWord}"`);
-    console.log(`  Response time: ${analysisDuration}ms`);
+    if (!singleWord || singleWord.length === 0) {
+      console.log('⚠ WARNING: Gemini API returned empty or invalid response');
+      console.log(`  Raw response: "${analysisText}"`);
+      console.log(`  Response time: ${analysisDuration}ms`);
+      console.log();
+      console.log('The API is responding, but may not be functioning optimally.');
+    } else {
+      console.log('✓ Successfully received analysis from Gemini API');
+      console.log(`  Analysis result: "${singleWord}"`);
+      console.log(`  Response time: ${analysisDuration}ms`);
+    }
     console.log();
     
     // Final summary
