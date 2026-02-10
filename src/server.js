@@ -97,9 +97,7 @@ process.on('unhandledRejection', (reason, promise) => {
 const validateEnvironment = () => {
   const requiredEnvVars = [];
   
-  // Add required environment variables here if any
-  // Example: requiredEnvVars.push('DATABASE_URL', 'JWT_SECRET');
-  
+ 
   const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
   
   if (missingEnvVars.length > 0) {
@@ -115,10 +113,10 @@ const validateEnvironment = () => {
 
 // Start the server
 if (require.main === module) {
-  console.log('🔍 Validating environment...');
+  console.log(' Validating environment...');
   validateEnvironment();
   
-  console.log('🚀 Starting BAJAJ API Server...');
+  console.log(' Starting BAJAJ API Server...');
   startServer();
 }
 
